@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title> naiveLinks.html </title>
+</head>
+
+<body>
+<link href="style.css" rel="stylesheet">
+<script type="text/javascript"></script>
+<script src = "http://d3js.org/d3.v3.min.js"></script>
+
+<script src = "data.js"></script>
+<script src = "parameters.js"></script>
+<script src = "nodeLayout.js"></script>
+<script src = "linkMatrix.js"></script>
+<script src = "naiveLinkLayout.js"></script>
+<script src = "condensedLinkLayout.js"></script>
+<script src = "reducedLinkLayout.js"></script>
+
+<script>
+    var width = 1000;
+    var height = 800;
+
+    svg = d3.select("body")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width/2 + "," + height/2 + ")");
+
+    //-----------------------------------------
+    var lines = d3.select("svg").append("line")
+            .attr("x1", 0)
+            .attr("y1", height/2)
+            .attr("x2", width)
+            .attr("y2", height/2)
+            .attr("stroke", "red")
+            .attr("stroke-width", 1);
+
+    var lines = d3.select("svg").append("line")
+            .attr("x1", width/2)
+            .attr("y1", 0)
+            .attr("x2", width/2)
+            .attr("y2", height)
+            .attr("stroke", "red")
+            .attr("stroke-width", 1);
+    //--------------------------------------
+
+
+    var svg;
+    var nodes = [];
+    var paths, greenLinks, greenArcs, blackLinks, blackArcs;
+    var maxGreenChannels, maxBlackChannels;
+
+
+    getGreenPaths();
+    getBlackPaths();
+
+    showPaths('green', greenLinks, greenArcs);
+    showPaths('black', blackLinks, blackArcs);
+
+
+    var param = {
+            yFactor: (maxGreenChannels+1) * params.channelGap,
+            xFactor: (maxBlackChannels+1) * params.channelGap
+    };
+
+    console.log('in index: ', params.yFactor, "maxgreenchannels ", maxGreenChannels)
+
+    data.forEach(function(value, key){
+        nodes.push({"x": value.col*params.xFactor+params.margin, "y": value.row*params.yFactor+params.margin});
+    });
+
+
+    showRouters();
+
+
+    function getGreenPaths(){
+        color = 'green';
+
+        var linkMatrix = createLinkMatrix(color);
+        linkMatrix = populateLinkMatrix(color, linkMatrix, data, greenLinks);
+
+        paths = createNaiveLinks(color, linkMatrix);
+//        paths = createCondensedLinks(color, linkMatrix);
+//        paths = createReducedLinks(color, linkMatrix, param);
+
+        greenLinks = paths.links;
+        greenArcs = paths.arcs;
+        maxGreenChannels = paths.maxChannel;
+    }
+
+    function getBlackPaths(){
+        color = 'black'
+        var linkMatrix = createLinkMatrix(color);
+        linkMatrix = populateLinkMatrix(color, linkMatrix, data, blackLinks);
+
+        paths = createNaiveLinks(color, linkMatrix);
+//        paths = createCondensedLinks(color, linkMatrix);
+//        paths = createReducedLinks(color, linkMatrix, param);
+
+        blackLinks = paths.links;
+        blackArcs = paths.arcs;
+        maxBlackChannels = paths.maxChannel;
+    }
+
+    function showRouters(){
+        var d3Nodes = svg.append("g");
+        d3Nodes.selectAll("node")
+                .data(nodes)
+                .enter()
+                .append("circle")
+                .attr("cx", function(value, key){ return value.x })
+                .attr("cy", function(value, key){ return value.y })
+                .attr("r", params.radius)
+                .attr('stroke', 'red')
+                .attr('stroke-width', 1)
+                .attr('fill', 'red');
+    }
+
+    function showPaths(color, links, arcs){
+
+        console.log('in show paths');
+
+        var arc = d3.svg.arc()
+                .startAngle(function(d){return d.startAngle*(Math.PI/180);})
+                .endAngle(function(d){return d.endAngle*(Math.PI/180);})
+                .innerRadius(function(){return params.channelGap-0.5;})
+                .outerRadius(function(){return  params.channelGap+0.5;});
+
+        var d3Arcs = svg.append("g");
+        d3Arcs.selectAll("arc")
+                .data(arcs)
+                .enter()
+                .append("path")
+                .attr("d", arc)
+                .attr("transform", function(d){
+                    return "translate("+ d.center.x+","+ d.center.y+")"; })
+                .attr("fill", color);
+
+
+
+        //// //--------------display links-------------------
+        var strokeWidth = 1;
+
+        var d3Links = svg.append("g");
+        d3Links.selectAll("link")
+                .data(links)
+                .enter()
+                .append("line")
+                .attr("x1", function(d){ return d.source.x})
+                .attr("y1", function(d){ return d.source.y})
+                .attr("x2", function(d){ return d.target.x})
+                .attr("y2", function(d){ return d.target.y})
+                .attr("stroke-width", strokeWidth)
+                .attr("stroke", color);
+
+        console.log(links.length);
+    }
+
+</script>
+</body>
+</html>

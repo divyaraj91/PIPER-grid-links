@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title> Testing bezier curve </title>
+
+    <script type="text/javascript"></script>
+    <script src = "http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+<script>
+    var svgContainer = d3.select('body')
+            .append('svg')
+            .attr('height', 300)
+            .attr('width', 300)
+            .append('g');
+
+    var da = [1];
+
+    var curve = svgContainer.selectAll('path')
+            .data(da)
+                .enter()
+                .append('path')
+                .attr('d', function(d){
+                    return "M" + 10 + "," + 10 +
+                            "Q" + 10 + "," + 30 +
+                            " " + 30 + "," + 30 +
+                            "L" + 60 + "," + 30;
+//                            "M" + 60 + "," + 30;
+                })
+                .attr('stroke-width', 1)
+                .attr('stroke', 'red')
+            .attr('fill', 'none');
+
+
+
+
+//    var bezierCurve =
+</script>
+</body>
+</html>
