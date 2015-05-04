@@ -33,22 +33,19 @@ var createNaiveGreenLinks = (function(){
                         end = Math.max(i, j);
 
                         if(beg != end){
-                            sNodeX = beg*params.xFactor+params.margin;
-                            sNodeY = k*params.yFactor+params.margin;
-                            tNodeX = end*params.xFactor+params.margin;
-                            tNodeY = k*params.yFactor+params.margin;
+                            //sNodeX = beg*xFactor+params.margin;
+                            //sNodeY = k*yFactor+params.margin;
+                            //tNodeX = end*params.xFactor+params.margin;
+                            //tNodeY = k*params.yFactor+params.margin;
 
                             channel = i;
-                            //links.push({"source":{"x":sNodeX , "y": sNodeY}, "target": {"x": sNodeX, "y": sNodeY-(i+1)*params.channelGap}});
-                            //links.push({"source": {"x": sNodeX, "y": sNodeY-(i+1)*params.channelGap}, "target": {"x": tNodeX, "y": tNodeY-(i+1)*params.channelGap}});
-                            //links.push({"source": {"x": tNodeX, "y": tNodeY}, "target": {"x": tNodeX, "y": tNodeY-(i+1)*params.channelGap}})
 
-                            sNodeX = beg*params.xFactor+params.margin;
-                            sNodeY = k*params.yFactor+params.margin;
+                            sNodeX = beg*xFactor+params.margin;
+                            sNodeY = k*yFactor+params.margin;
                             sNodeLinkY = sNodeY-(channel+1)*params.channelGap;
 
-                            tNodeX = end*params.xFactor+params.margin;
-                            tNodeY = k*params.yFactor+params.margin;
+                            tNodeX = end*xFactor+params.margin;
+                            tNodeY = k*yFactor+params.margin;
                             tNodeLinkY = tNodeY-(channel+1)*params.channelGap;
 
                             //try arc
@@ -96,12 +93,12 @@ var createNaiveBlackLinks = (function(){
                         end = Math.max(i, j);
 
                         if(beg != end){
-                            sNodeX = k*params.xFactor+params.margin;
-                            sNodeY = beg*params.yFactor+params.margin;
+                            sNodeX = k*xFactor+params.margin;
+                            sNodeY = beg*yFactor+params.margin;
                             sNodeLinkX = sNodeX-(i+1)*params.channelGap; //-
 
-                            tNodeX = k*params.xFactor+params.margin;
-                            tNodeY = end*params.yFactor+params.margin;
+                            tNodeX = k*xFactor+params.margin;
+                            tNodeY = end*yFactor+params.margin;
                             tNodeLinkX = tNodeX-(i+1)*params.channelGap;
 
                             ////try arc

@@ -2,6 +2,9 @@
  * Created by Divya on 4/14/2015.
  */
 
+    var greenChannelCount, blackChannelCount;
+    //var yFactor, xFactor;
+
 var createReducedLinks = (function(){
     return function(color, linkMatrix){
         if(color == 'green'){
@@ -17,6 +20,7 @@ var createReducedLinks = (function(){
 })();
 
 
+
 var createReducedGreenLinks = (function(){
     return function(linkMatrix){
         var links = [];
@@ -27,7 +31,9 @@ var createReducedGreenLinks = (function(){
         var centerX, centerY;
         var arcs = [];
 
-        var maxChannel = 0;
+        //var maxChannel = getChannelCountReduced('green', linkMatrix);
+
+        //yFactor = (maxChannel+2) * params.channelGap;
 
         for(var k=0; k<linkMatrix.length; k++){
             for(var i=0; i<linkMatrix[k].length; i++){
@@ -48,9 +54,6 @@ var createReducedGreenLinks = (function(){
                                 }
                             }
                             if(validChannel == true){
-                                if(channel > maxChannel){
-                                    maxChannel = channel;
-                                }
                                 break;
                             }
                         }
@@ -60,12 +63,12 @@ var createReducedGreenLinks = (function(){
                         }
 
 
-                        sNodeX = beg*params.xFactor+params.margin;
-                        sNodeY = k*params.yFactor+params.margin;
+                        sNodeX = beg*xFactor+params.margin;
+                        sNodeY = k*yFactor+params.margin;
                         sNodeLinkY = sNodeY-(channel+1)*params.channelGap;
 
-                        tNodeX = end*params.xFactor+params.margin;
-                        tNodeY = k*params.yFactor+params.margin;
+                        tNodeX = end*xFactor+params.margin;
+                        tNodeY = k*yFactor+params.margin;
                         tNodeLinkY = tNodeY-(channel+1)*params.channelGap;
 
                         //try arc
@@ -89,8 +92,7 @@ var createReducedGreenLinks = (function(){
         }
         return {
             links: links,
-            arcs: arcs,
-            maxChannel: maxChannel+1
+            arcs: arcs
         };
     }
 })();
@@ -107,8 +109,6 @@ var createReducedBlackLinks = (function(){
 
         var centerX, centerY;
         var arcs = [];
-
-        var maxChannel = 0;
 
         for(var k=0; k<linkMatrix.length; k++){
             for(var i=0; i<linkMatrix[k].length; i++){
@@ -129,9 +129,6 @@ var createReducedBlackLinks = (function(){
                                 }
                             }
                             if(validChannel == true){
-                                if(channel > maxChannel){
-                                    maxChannel = channel;
-                                }
                                 break;
                             }
                         }
@@ -141,12 +138,12 @@ var createReducedBlackLinks = (function(){
                         }
 
 
-                        sNodeX = k*params.xFactor+params.margin;
-                        sNodeY = beg*params.yFactor+params.margin;
+                        sNodeX = k*xFactor+params.margin;
+                        sNodeY = beg*yFactor+params.margin;
                         sNodeLinkX = sNodeX-(channel+1)*params.channelGap; //-
 
-                        tNodeX = k*params.xFactor+params.margin;
-                        tNodeY = end*params.yFactor+params.margin;
+                        tNodeX = k*xFactor+params.margin;
+                        tNodeY = end*yFactor+params.margin;
                         tNodeLinkX = tNodeX-(channel+1)*params.channelGap;
 
                         ////try arc
@@ -159,17 +156,16 @@ var createReducedBlackLinks = (function(){
                         arcs.push({"center": {"x": center2X, "y": center2Y}, "startAngle": 180, "endAngle": 270});
 
                         //links
-                        links.push({"source":{"x":sNodeX , "y": sNodeY}, "target": {"x": sNodeLinkX, "y": sNodeY}});
+                        links.push({"source":{"x":sNodeX , "y": sNodeY}, "target": {"x": center1X, "y": sNodeY}});
                         links.push({"source": {"x": sNodeLinkX, "y": center1Y}, "target": {"x": tNodeLinkX, "y": center2Y}});
-                        links.push({"source": {"x": tNodeX, "y": tNodeY}, "target": {"x": tNodeLinkX, "y": tNodeY}});
+                        links.push({"source": {"x": tNodeX, "y": tNodeY}, "target": {"x": center2X, "y": tNodeY}});
                     }
                 }
             }
         }
         return {
             links: links,
-            arcs: arcs,
-            maxChannel: maxChannel+1
+            arcs: arcs
         };
     }
 })();

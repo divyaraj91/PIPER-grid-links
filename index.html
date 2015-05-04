@@ -17,6 +17,7 @@
 <script src = "naiveLinkLayout.js"></script>
 <script src = "condensedLinkLayout.js"></script>
 <script src = "reducedLinkLayout.js"></script>
+<script src = 'channels.js'></script>
 
 <script>
     var width = 1000;
@@ -52,10 +53,11 @@
     var nodes = [];
     var paths, greenLinks, greenArcs, blackLinks, blackArcs;
     var maxGreenChannels, maxBlackChannels;
+    var xFactor, yFactor;
 
-
-    getGreenPaths();
-    getBlackPaths();
+//    getGreenPaths();
+//    getBlackPaths();
+    getPaths();
 
     showPaths('green', greenLinks, greenArcs);
     showPaths('black', blackLinks, blackArcs);
@@ -69,12 +71,49 @@
     console.log('in index: ', params.yFactor, "maxgreenchannels ", maxGreenChannels)
 
     data.forEach(function(value, key){
-        nodes.push({"x": value.col*params.xFactor+params.margin, "y": value.row*params.yFactor+params.margin});
+        nodes.push({"x": value.col*xFactor+params.margin, "y": value.row*yFactor+params.margin});
     });
 
 
     showRouters();
 
+    function getPaths(){
+        var greenLinkMatrix = createLinkMatrix('green');
+        var blackLinkMatrix = createLinkMatrix('black');
+
+        greenLinkMatrix = populateLinkMatrix('green', greenLinkMatrix, data, greenLinks);
+        blackLinkMatrix = populateLinkMatrix('black', blackLinkMatrix, data, blackLinks);
+
+//        channelCount = getChannelCountNaive(greenLinkMatrix, blackLinkMatrix);
+//        channelCount = getChannelCountCondensed(greenLinkMatrix, blackLinkMatrix);
+        channelCount = getChannelCountReduced(greenLinkMatrix, blackLinkMatrix);
+
+        console.log(channelCount.greenChannelCount, channelCount.blackChannelCount);
+
+        xFactor = (channelCount.blackChannelCount+2)*params.channelGap;
+        yFactor = (channelCount.greenChannelCount+2)*params.channelGap;
+
+        console.log(xFactor, yFactor, params.xFactor, params.yFactor);
+
+//        greenPaths = createNaiveLinks('green', greenLinkMatrix);
+//        blackPaths = createNaiveLinks('black', blackLinkMatrix);
+
+//        greenPaths = createCondensedLinks('green', greenLinkMatrix);
+//        blackPaths = createCondensedLinks('black', blackLinkMatrix);
+
+        greenPaths = createReducedLinks('green', greenLinkMatrix);
+        blackPaths = createReducedLinks('black', blackLinkMatrix);
+
+        greenLinks = greenPaths.links;
+        greenArcs = greenPaths.arcs;
+        blackLinks = blackPaths.links;
+        blackArcs = blackPaths.arcs;
+
+//        maxGreenChannels = paths.maxChannel;
+//        yFactor = paths.yFactor;
+
+
+    }
 
     function getGreenPaths(){
         color = 'green';
@@ -82,13 +121,14 @@
         var linkMatrix = createLinkMatrix(color);
         linkMatrix = populateLinkMatrix(color, linkMatrix, data, greenLinks);
 
-        paths = createNaiveLinks(color, linkMatrix);
+//        paths = createNaiveLinks(color, linkMatrix);
 //        paths = createCondensedLinks(color, linkMatrix);
-//        paths = createReducedLinks(color, linkMatrix, param);
+        paths = createReducedLinks(color, linkMatrix, param);
 
         greenLinks = paths.links;
         greenArcs = paths.arcs;
         maxGreenChannels = paths.maxChannel;
+        yFactor = paths.yFactor;
     }
 
     function getBlackPaths(){
@@ -96,9 +136,9 @@
         var linkMatrix = createLinkMatrix(color);
         linkMatrix = populateLinkMatrix(color, linkMatrix, data, blackLinks);
 
-        paths = createNaiveLinks(color, linkMatrix);
+//        paths = createNaiveLinks(color, linkMatrix);
 //        paths = createCondensedLinks(color, linkMatrix);
-//        paths = createReducedLinks(color, linkMatrix, param);
+        paths = createReducedLinks(color, linkMatrix, param);
 
         blackLinks = paths.links;
         blackArcs = paths.arcs;

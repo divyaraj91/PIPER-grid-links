@@ -5,7 +5,7 @@
 var params = {margin: 40,
     xFactor: 20,
     yFactor: 50,
-    channelGap: 3,
+    channelGap: 4,
     linkBuf: 3,
     controlBuf: 2,
     radius: 1};

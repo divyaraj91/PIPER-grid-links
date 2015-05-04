@@ -16,30 +16,6 @@ var createCondensedLinks = (function(){
     }
 })();
 
-//var getNumberOfChannels = (function(){
-//    return function(linkMatrix){
-//        var channelCount = 0;
-//
-//        for(var k=0; k<linkMatrix.length; k++){
-//
-//            for(var i=0; i<linkMatrix[k].length; i++){
-//                var beg=0, end=0;
-//
-//                for(var j=0; j<linkMatrix[k][i].length; j++){
-//                    if(linkMatrix[k][i][j].left == true){
-//
-//                    }
-//                }
-//
-//
-//
-//            }
-//        }
-//
-//        return channelCount;
-//    }
-//})();
-
 var createCondensedGreenLinks = (function(){
     return function(linkMatrix){
         var links = [];
@@ -59,10 +35,6 @@ var createCondensedGreenLinks = (function(){
                         end = j;
 
                         if(beg != end){
-                            sNodeX = beg*params.xFactor+params.margin;
-                            sNodeY = k*params.yFactor+params.margin;
-                            tNodeX = end*params.xFactor+params.margin;
-                            tNodeY = k*params.yFactor+params.margin;
 
                             if(channelLevel.has(i)){
                                 channel = channelLevel.get(i);
@@ -73,16 +45,12 @@ var createCondensedGreenLinks = (function(){
                                 channelIdx += 1;
                             }
 
-                            //links.push({"source":{"x":sNodeX , "y": sNodeY}, "target": {"x": sNodeX, "y": sNodeY-channel*params.channelGap}});
-                            //links.push({"source": {"x": sNodeX, "y": sNodeY-channel*params.channelGap}, "target": {"x": tNodeX, "y": tNodeY-channel*params.channelGap}});
-                            //links.push({"source": {"x": tNodeX, "y": tNodeY}, "target": {"x": tNodeX, "y": tNodeY-channel*params.channelGap}})
-
-                            sNodeX = beg*params.xFactor+params.margin;
-                            sNodeY = k*params.yFactor+params.margin;
+                            sNodeX = beg*xFactor+params.margin;
+                            sNodeY = k*yFactor+params.margin;
                             sNodeLinkY = sNodeY-(channel+1)*params.channelGap;
 
-                            tNodeX = end*params.xFactor+params.margin;
-                            tNodeY = k*params.yFactor+params.margin;
+                            tNodeX = end*xFactor+params.margin;
+                            tNodeY = k*yFactor+params.margin;
                             tNodeLinkY = tNodeY-(channel+1)*params.channelGap;
 
                             //try arc
@@ -103,8 +71,6 @@ var createCondensedGreenLinks = (function(){
                     }
 
                 }
-
-
 
             }
         }
@@ -135,10 +101,6 @@ var createCondensedBlackLinks = (function(){
                         end = j;
 
                         if(beg != end){
-                            sNodeX = beg*params.xFactor+params.margin;
-                            sNodeY = k*params.yFactor+params.margin;
-                            tNodeX = end*params.xFactor+params.margin;
-                            tNodeY = k*params.yFactor+params.margin;
 
                             if(channelLevel.has(i)){
                                 channel = channelLevel.get(i);
@@ -149,16 +111,12 @@ var createCondensedBlackLinks = (function(){
                                 channelIdx += 1;
                             }
 
-                            //links.push({"source":{"x":sNodeX , "y": sNodeY}, "target": {"x": sNodeX, "y": sNodeY-channel*params.channelGap}});
-                            //links.push({"source": {"x": sNodeX, "y": sNodeY-channel*params.channelGap}, "target": {"x": tNodeX, "y": tNodeY-channel*params.channelGap}});
-                            //links.push({"source": {"x": tNodeX, "y": tNodeY}, "target": {"x": tNodeX, "y": tNodeY-channel*params.channelGap}})
-
-                            sNodeX = k*params.xFactor+params.margin;
-                            sNodeY = beg*params.yFactor+params.margin;
+                            sNodeX = k*xFactor+params.margin;
+                            sNodeY = beg*yFactor+params.margin;
                             sNodeLinkX = sNodeX-(channel+1)*params.channelGap; //-
 
-                            tNodeX = k*params.xFactor+params.margin;
-                            tNodeY = end*params.yFactor+params.margin;
+                            tNodeX = k*xFactor+params.margin;
+                            tNodeY = end*yFactor+params.margin;
                             tNodeLinkX = tNodeX-(channel+1)*params.channelGap;
 
                             ////try arc
